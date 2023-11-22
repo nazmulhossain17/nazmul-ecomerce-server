@@ -14,13 +14,16 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // colors: {
-    //   type: [String],
-    //   required: true,
-    // },
-    image: {
-      type: String,
+    images: {
+      type: [String], // Array of strings (image URLs)
       required: true,
+      validate: {
+        validator: function (value) {
+          // Validate that there are at most 4 images
+          return value.length <= 4;
+        },
+        message: "Images array should contain at most 4 images.",
+      },
     },
     description: {
       type: String,
