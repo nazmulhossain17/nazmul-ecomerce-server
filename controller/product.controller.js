@@ -28,4 +28,18 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, getAllProducts };
+const getSingleProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await Product.findOne({ _id: id });
+    if (!result) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+  }
+};
+
+module.exports = { createProduct, getAllProducts, getSingleProduct };
