@@ -1,23 +1,16 @@
 const Product = require("../models/product.schema");
 
 const createProduct = async (req, res) => {
-  const { name, company, price, images, description, category } = req.body;
-
-  // Check if images is not present or not an array
-  if (!images || !Array.isArray(images) || images.length > 4) {
-    return res.status(400).json({
-      error: "Images should be an array with at most 4 elements.",
-    });
-  }
+  const { name, price, image, features, status, rating } = req.body;
 
   try {
     const product = new Product({
       name,
-      company,
+      image,
       price,
-      images,
-      description,
-      category,
+      features,
+      status,
+      rating,
     });
     const createdData = await product.save();
     return res.status(201).json(createdData);

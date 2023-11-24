@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    company: {
+    image: {
       type: String,
       required: true,
     },
@@ -14,32 +14,17 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    images: {
-      type: [String], // Array of strings (image URLs)
-      required: true,
-      validate: {
-        validator: function (value) {
-          // Validate that there are at most 4 images
-          return value.length <= 4;
-        },
-        message: "Images array should contain at most 4 images.",
-      },
-    },
-    description: {
-      type: String,
+    features: {
+      type: [String],
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
-    },
-    featured: {
+    status: {
       type: Boolean,
-      default: false,
+      required: true,
     },
-    shipping: {
-      type: Boolean,
-      default: false,
+    rating: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }
