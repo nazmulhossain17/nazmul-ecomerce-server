@@ -47,52 +47,9 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-// const verifyToken = (req, res, next) => {
-//   const token = req.cookies.access_token;
-//   console.log(token);
-
-//   if (!token) {
-//     return next(
-//       errorResponse(res, {
-//         statusCode: 401,
-//         message: "Unauthorized",
-//       })
-//     );
-//   }
-
-//   jwt.verify(token, jwtKey, (err, user) => {
-//     if (err) {
-//       return next(
-//         errorResponse(res, {
-//           statusCode: 403,
-//           message: "Forbidden",
-//         })
-//       );
-//     }
-
-//     // Ensure that user is an object before attaching it to req.user
-//     if (!user || typeof user !== "object") {
-//       return next(
-//         errorResponse(res, {
-//           statusCode: 403,
-//           message: "Invalid token payload",
-//         })
-//       );
-//     }
-
-//     req.user = user;
-
-//     // Set the "Authorization" header in the request
-//     req.headers.authorization = `Bearer ${token}`;
-
-//     next();
-//   });
-// };
-
 const isLoggedIn = async (req, res, next) => {
   try {
     const token = req.cookies.access_token;
-    console.log(token);
     if (!token) {
       return errorResponse(res, {
         statusCode: 404,
@@ -100,7 +57,6 @@ const isLoggedIn = async (req, res, next) => {
       });
     }
     const decoded = jwt.verify(token, jwtKey);
-    console.log(decoded);
     req.body.userId = decoded._id;
     next();
   } catch (error) {
@@ -111,4 +67,23 @@ const isLoggedIn = async (req, res, next) => {
   }
 };
 
-module.exports = { requireSignIn, isAdmin, isLoggedIn };
+const isLoggedOut = async (req, res, next) => {
+  try {
+    const token = req.cookies.access_token;
+    if (token) {
+      return errorResponse(res, {
+        statusCode: 404,
+        message: "User is already logged in",
+      });
+    }
+
+    next();
+  } catch (error) {
+    return errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { requireSignIn, isAdmin, isLoggedIn, isLoggedOut };

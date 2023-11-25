@@ -9,13 +9,14 @@ const {
   requireSignIn,
   isAdmin,
   isLoggedIn,
+  isLoggedOut,
 } = require("../middleware/authMiddleware");
 
 const authRouter = express.Router();
 
 authRouter.post("/register", handleRegister);
-authRouter.post("/login", handleLogin);
+authRouter.post("/login", isLoggedOut, handleLogin);
 authRouter.get("/user-info", isLoggedIn, getAllUsers);
-authRouter.get("/logout", handleLogout);
+authRouter.get("/logout", isLoggedIn, handleLogout);
 
 module.exports = authRouter;
