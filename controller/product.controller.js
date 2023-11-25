@@ -1,4 +1,5 @@
 const Product = require("../models/product.schema");
+const { successResponse, errorResponse } = require("./response.controller");
 
 const createProduct = async (req, res) => {
   const { name, price, image, features, status, rating } = req.body;
@@ -13,18 +14,33 @@ const createProduct = async (req, res) => {
       rating,
     });
     const createdData = await product.save();
-    return res.status(201).json(createdData);
+    // return res.status(201).json(createdData);
+    return successResponse(res, {
+      statusCode: 201,
+      message: "product created successful",
+      payload: { createdData },
+    });
   } catch (error) {
-    res.status(500).send(error);
+    return errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
   }
 };
 
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.status(200).json(products);
+    return successResponse(res, {
+      statusCode: 200,
+      message: "product data fetched",
+      payload: { products },
+    });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    return errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
   }
 };
 
@@ -35,10 +51,16 @@ const getSingleProduct = async (req, res) => {
     if (!result) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json(result);
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Single product data fetched",
+      payload: { result },
+    });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-    console.error(error);
+    return errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
   }
 };
 

@@ -2,6 +2,7 @@ const express = require("express");
 const UserRouter = require("./routes/user.route");
 const cors = require("cors");
 const authRouter = require("./routes/auth.route");
+const { errorResponse } = require("./controller/response.controller");
 
 const app = express();
 app.use(cors());
@@ -13,5 +14,12 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/", UserRouter);
 app.use("/api/auth/", authRouter);
+
+app.use((err, req, res, next) => {
+  return errorResponse(res, {
+    statusCode: err.status,
+    message: err.message,
+  });
+});
 
 module.exports = app;
