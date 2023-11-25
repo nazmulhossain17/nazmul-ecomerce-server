@@ -19,27 +19,15 @@ const requireSignIn = async (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.user._id).lean();
-
-    if (user === null) {
-      // User not found
+    console.log(req.user.isAdmin);
+    if (!req.user.isAdmin) {
       return errorResponse(res, {
-        statusCode: 404,
-        message: "User not found",
+        statusCode: 403,
+        message: "Forbidden.",
       });
     }
-
-    if (user.role === 0) {
-      // Unauthorized access
-      return errorResponse(res, {
-        statusCode: 401,
-        message: "Unauthorized Access",
-      });
-    } else {
-      next();
-    }
+    next();
   } catch (error) {
-    // Other errors
     return errorResponse(res, {
       statusCode: 500,
       message: "Error finding user",
@@ -57,7 +45,9 @@ const isLoggedIn = async (req, res, next) => {
       });
     }
     const decoded = jwt.verify(token, jwtKey);
-    req.body.userId = decoded._id;
+    // req.body.userId = decoded._id;
+    // console.log(decoded);
+    req.user = decoded.user;
     next();
   } catch (error) {
     return errorResponse(res, {

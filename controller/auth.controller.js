@@ -73,7 +73,8 @@ const handleLogin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user._id }, jwtKey);
+    // const token = jwt.sign({ id: user._id }, jwtKey);
+    const token = jwt.sign({ user }, jwtKey);
 
     res
       .status(200)
