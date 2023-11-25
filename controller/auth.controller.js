@@ -47,31 +47,38 @@ const handleRegister = async (req, res) => {
 const handleLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return errorResponse(res, {
-        statusCode: 404,
-        message: "Invalid email or password",
+        statusCode: 400,
+        message: "Email and password are required",
       });
     }
+
     const user = await UserModel.findOne({ email });
+
     if (!user) {
       return errorResponse(res, {
         statusCode: 404,
         message: "Email not found",
       });
     }
-    const match = await comparePassword(password, user.password);
-    if (!match) {
+
+    const passwordMatch = await comparePassword(password, user.password);
+
+    if (!passwordMatch) {
       return errorResponse(res, {
-        statusCode: 500,
-        message: "Invalid Password",
+        statusCode: 401,
+        message: "Incorrect email or password",
       });
     }
+
     const token = jwt.sign({ id: user._id }, jwtKey);
+
     res
       .status(200)
       .cookie("access_token", token, { httpOnly: true })
-      .send({ message: "Login successful" });
+      .json({ success: true, message: "Login successful" });
   } catch (error) {
     return errorResponse(res, {
       statusCode: 500,
@@ -80,4 +87,36 @@ const handleLogin = async (req, res) => {
   }
 };
 
-module.exports = { handleRegister, handleLogin };
+const getAllUsers = async (req, res) => {
+  try {
+    const products = await UserModel.find();
+    return successResponse(res, {
+      statusCode: 200,
+      message: "alluser data fetched",
+      payload: { products },
+    });
+  } catch (error) {
+    return errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+};
+
+const handleLogout = async (req, res) => {
+  try {
+    res.clearCookie("access_token");
+    return successResponse(res, {
+      statusCode: 200,
+      message: "user log out successful",
+      payload: {},
+    });
+  } catch (error) {
+    errorResponse(res, {
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { handleRegister, handleLogin, handleLogout, getAllUsers };
