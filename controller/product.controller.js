@@ -31,11 +31,7 @@ const createProduct = async (req, res) => {
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    return successResponse(res, {
-      statusCode: 200,
-      message: "product data fetched",
-      payload: { products },
-    });
+    res.status(201).json(products);
   } catch (error) {
     return errorResponse(res, {
       statusCode: 500,
@@ -48,14 +44,12 @@ const getSingleProduct = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await Product.findOne({ _id: id });
+
     if (!result) {
       return res.status(404).json({ message: "Product not found" });
     }
-    return successResponse(res, {
-      statusCode: 200,
-      message: "Single product data fetched",
-      payload: { result },
-    });
+
+    res.status(200).json(result); // Use status code 200 for success
   } catch (error) {
     return errorResponse(res, {
       statusCode: 500,

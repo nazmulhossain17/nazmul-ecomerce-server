@@ -73,13 +73,23 @@ const handleLogin = async (req, res) => {
       });
     }
 
-    // const token = jwt.sign({ id: user._id }, jwtKey);
     const token = jwt.sign({ user }, jwtKey);
 
     res
       .status(200)
       .cookie("access_token", token, { httpOnly: true })
-      .json({ success: true, message: "Login successful" });
+      .json({
+        success: true,
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          address: user.address,
+          phone: user.phone,
+          isAdmin: user.isAdmin,
+        },
+      });
   } catch (error) {
     return errorResponse(res, {
       statusCode: 500,
