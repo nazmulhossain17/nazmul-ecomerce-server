@@ -28,21 +28,14 @@ const productSchema = new mongoose.Schema(
     },
     features: {
       type: [String],
-      required: true,
-    },
-    status: {
-      type: Boolean,
-      required: true,
     },
     reviews: [
       {
         name: {
           type: String,
-          required: true,
         },
         rating: {
           type: Number,
-          required: true,
         },
         comment: {
           type: String,

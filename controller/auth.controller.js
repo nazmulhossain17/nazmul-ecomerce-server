@@ -44,60 +44,6 @@ const handleRegister = async (req, res) => {
   }
 };
 
-// const handleLogin = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     if (!email || !password) {
-//       return errorResponse(res, {
-//         statusCode: 400,
-//         message: "Email and password are required",
-//       });
-//     }
-
-//     const user = await UserModel.findOne({ email });
-
-//     if (!user) {
-//       return errorResponse(res, {
-//         statusCode: 404,
-//         message: "Email not found",
-//       });
-//     }
-
-//     const passwordMatch = await comparePassword(password, user.password);
-
-//     if (!passwordMatch) {
-//       return errorResponse(res, {
-//         statusCode: 401,
-//         message: "Incorrect email or password",
-//       });
-//     }
-
-//     const token = jwt.sign({ user }, jwtKey);
-
-//     res
-//       .status(200)
-//       .cookie("access_token", token, { httpOnly: true })
-//       .json({
-//         success: true,
-//         message: "Login successful",
-//         user: {
-//           _id: user._id,
-//           name: user.name,
-//           email: user.email,
-//           address: user.address,
-//           phone: user.phone,
-//           isAdmin: user.isAdmin,
-//         },
-//       });
-//   } catch (error) {
-//     return errorResponse(res, {
-//       statusCode: 500,
-//       message: error.message,
-//     });
-//   }
-// };
-
 const handleLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -127,15 +73,15 @@ const handleLogin = async (req, res) => {
       });
     }
 
-    const accessToken = jwt.sign({ user }, jwtKey, { expiresIn: "15m" }); // Set expiration for access token
-    const refreshToken = jwt.sign({ user }, refreshJwtKey, {
-      expiresIn: "12d",
-    }); // Set expiration for refresh token
+    const token = jwt.sign({ user }, jwtKey);
 
     res
       .status(200)
-      .cookie("access_token", accessToken, { httpOnly: true })
-      .cookie("refresh_token", refreshToken, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        samesite: "none",
+      })
       .json({
         success: true,
         message: "Login successful",
@@ -144,6 +90,8 @@ const handleLogin = async (req, res) => {
           name: user.name,
           email: user.email,
           address: user.address,
+          image: user.image,
+          bio: user.bio,
           phone: user.phone,
           isAdmin: user.isAdmin,
         },
@@ -155,6 +103,68 @@ const handleLogin = async (req, res) => {
     });
   }
 };
+
+// const handleLogin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return errorResponse(res, {
+//         statusCode: 400,
+//         message: "Email and password are required",
+//       });
+//     }
+
+//     const user = await UserModel.findOne({ email });
+
+//     if (!user) {
+//       return errorResponse(res, {
+//         statusCode: 404,
+//         message: "Email not found",
+//       });
+//     }
+
+//     const passwordMatch = await comparePassword(password, user.password);
+
+//     if (!passwordMatch) {
+//       return errorResponse(res, {
+//         statusCode: 401,
+//         message: "Incorrect email or password",
+//       });
+//     }
+
+//     const accessToken = jwt.sign({ user }, jwtKey, { expiresIn: "15m" }); // Set expiration for access token
+//     const refreshToken = jwt.sign({ user }, refreshJwtKey, {
+//       expiresIn: "12d",
+//     }); // Set expiration for refresh token
+
+//     res
+//       .status(200)
+//       .cookie("access_token", accessToken, { httpOnly: true }, '1d')
+//       .cookie("refresh_token", refreshToken, {
+//         httpOnly: true,
+//         maxAge: 7 * 24 * 60 * 60 * 1000,
+//         samesite: "none",
+//       })
+//       .json({
+//         success: true,
+//         message: "Login successful",
+//         user: {
+//           _id: user._id,
+//           name: user.name,
+//           email: user.email,
+//           address: user.address,
+//           phone: user.phone,
+//           isAdmin: user.isAdmin,
+//         },
+//       });
+//   } catch (error) {
+//     return errorResponse(res, {
+//       statusCode: 500,
+//       message: error.message,
+//     });
+//   }
+// };
 
 const getAllUsers = async (req, res) => {
   try {

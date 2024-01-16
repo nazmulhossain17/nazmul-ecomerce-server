@@ -2,22 +2,34 @@ const Product = require("../models/product.schema");
 const { successResponse, errorResponse } = require("./response.controller");
 
 const createProduct = async (req, res) => {
-  const { name, price, image, features, status, rating } = req.body;
+  const {
+    name,
+    price,
+    image,
+    category,
+    description,
+    rating,
+    features,
+    reviews,
+  } = req.body;
 
   try {
     const product = new Product({
       name,
       image,
+      category,
       price,
-      features,
-      status,
+      description,
       rating,
+      features,
+      reviews,
     });
+
     const createdData = await product.save();
-    // return res.status(201).json(createdData);
+
     return successResponse(res, {
       statusCode: 201,
-      message: "product created successful",
+      message: "Product created successfully",
       payload: { createdData },
     });
   } catch (error) {
