@@ -13,13 +13,9 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
     },
-    bio: {
-      type: String,
-      default: "",
-    },
     image: {
       type: String,
-      default: "",
+      default: "https://static.thenounproject.com/png/5034901-200.png",
     },
     password: {
       type: String,

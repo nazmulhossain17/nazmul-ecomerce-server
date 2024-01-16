@@ -21,9 +21,9 @@ const isAdmin = async (req, res, next) => {
   try {
     console.log(req.user.isAdmin);
     if (!req.user.isAdmin) {
-      return errorResponse(res, {
-        statusCode: 403,
-        message: "Forbidden.",
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized Error",
       });
     }
     next();
