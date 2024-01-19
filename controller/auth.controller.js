@@ -198,4 +198,25 @@ const handleLogout = async (req, res) => {
   }
 };
 
-module.exports = { handleRegister, handleLogin, handleLogout, getAllUsers };
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Delete the user
+    await UserModel.findByIdAndDelete(userId);
+    return res.status(200).json({ message: "user deleted successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+module.exports = {
+  handleRegister,
+  handleLogin,
+  handleLogout,
+  getAllUsers,
+  deleteUser,
+};

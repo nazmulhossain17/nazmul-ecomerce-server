@@ -4,9 +4,9 @@ const {
   handleLogin,
   getAllUsers,
   handleLogout,
+  deleteUser,
 } = require("../controller/auth.controller");
 const {
-  requireSignIn,
   isAdmin,
   isLoggedIn,
   isLoggedOut,
@@ -16,7 +16,8 @@ const authRouter = express.Router();
 
 authRouter.post("/register", isLoggedOut, handleRegister);
 authRouter.post("/login", isLoggedOut, handleLogin);
-authRouter.get("/user-info", isLoggedIn, isAdmin, getAllUsers);
-authRouter.get("/logout", handleLogout);
+authRouter.get("/user-info", isLoggedOut, getAllUsers);
+authRouter.get("/logout", isLoggedOut, handleLogout);
+authRouter.delete("/delete/:id", isLoggedIn, isAdmin, deleteUser);
 
 module.exports = authRouter;
