@@ -18,7 +18,9 @@ authRouter.post("/register", isLoggedOut, handleRegister);
 authRouter.post("/login", isLoggedOut, handleLogin);
 // authRouter.get("/user-info", isAdmin, getAllUsers);
 authRouter.get("/user-info", getAllUsers);
-authRouter.get("/logout", isLoggedIn, handleLogout);
-authRouter.delete("/delete/:id", isLoggedIn, isAdmin, deleteUser);
+// authRouter.get("/logout", isLoggedIn, handleLogout);
+authRouter.get("/logout", handleLogout);
+// authRouter.delete("/delete/:id", isLoggedIn, isAdmin, deleteUser);
+authRouter.delete("/delete/:id", deleteUser);
 
 module.exports = authRouter;
