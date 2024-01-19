@@ -6,7 +6,9 @@ const authRouter = require("./routes/auth.route");
 const { errorResponse } = require("./controller/response.controller");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({ origin: "https://nazmul-ecomerce-sto.web.app", credentials: true })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
