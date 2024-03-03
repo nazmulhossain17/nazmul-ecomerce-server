@@ -8,7 +8,14 @@ const authRouter = require("./src/routes/auth.route");
 const PORT = 5000;
 const app = express()
 
-app.use(cors())
+app.use(
+    cors({
+      origin: "https://nazmul-ecomerce-sto.web.app",
+      credentials: true,
+    })
+  );
+  
+  app.options("*", cors());
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))

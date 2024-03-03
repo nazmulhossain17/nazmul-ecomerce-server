@@ -4,7 +4,7 @@ const { successResponse, errorResponse } = require("./response.controller");
 
 const createProduct = async (req, res) => {
   try {
-    const { name, image, category, price, description, ownerId } = req.body;
+    const { name, image, category, price, description, ownerId, sellerName } = req.body;
 
     const product = await prisma.product.create({
       data: {
@@ -14,6 +14,7 @@ const createProduct = async (req, res) => {
         price,
         description,
         ownerId,
+        sellerName
       },
     });
 
@@ -80,4 +81,25 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, getAllProducts, getSingleProduct, deleteProduct, updateProduct };
+
+
+const getUserProducts = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Assuming userId is part of the route params
+
+    const userProducts = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { products: true },
+    });
+
+    if (!userProducts) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ products: userProducts.products });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { createProduct, getAllProducts, getSingleProduct, getUserProducts, deleteProduct, updateProduct };

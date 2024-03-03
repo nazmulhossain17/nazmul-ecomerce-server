@@ -2,8 +2,8 @@ const { hashPassword, comparePassword } = require("../helper/authHelper");
 const UserModel = require("../models/user.schema");
 const { errorResponse, successResponse } = require("./response.controller");
 const jwt = require("jsonwebtoken");
-const { jwtKey, refreshJwtKey } = require("../../config");
 const prisma = require("../../prisma");
+const { jwtKey } = require("../../config");
 
 const handleRegister = async (req, res) => {
   try {

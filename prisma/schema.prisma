@@ -29,12 +29,13 @@ model Product {
   name        String
   image       String
   category    String
-  price       Float
+  price       Int
   description String
-  rating      Float    @default(0)
+  rating      Int      @default(0)
   features    String[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   ownerId     String   @db.ObjectId
   User        User     @relation(fields: [ownerId], references: [id])
+  sellerName  String
 }
